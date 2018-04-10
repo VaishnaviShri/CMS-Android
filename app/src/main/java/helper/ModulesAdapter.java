@@ -18,10 +18,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Callback;
@@ -32,6 +32,7 @@ import java.util.List;
 
 import app.MyApplication;
 import crux.bphc.cms.R;
+import crux.bphc.cms.fragments.MoreOptionsFragment;
 import set.Content;
 import set.Module;
 
@@ -126,86 +127,93 @@ public class ModulesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
 
             more.setOnClickListener(v -> {
-                final Module module = modules.get(getLayoutPosition());
-                final int position = getLayoutPosition();
-                AlertDialog.Builder alertDialog;
-
-                if (MyApplication.getInstance().isDarkModeEnabled()) {
-                    alertDialog = new AlertDialog.Builder(context,R.style.Theme_AppCompat_Dialog_Alert);
-                } else {
-                    alertDialog = new AlertDialog.Builder(context,R.style.Theme_AppCompat_Light_Dialog_Alert);
-                }
-
-                alertDialog.setTitle(module.getName());
-                alertDialog.setNegativeButton("Cancel", null);
-
-                final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1);
-                if (downloaded) {
-                    arrayAdapter.add("View");
-                    arrayAdapter.add("Re-Download");
-                    arrayAdapter.add("Share");
-                    arrayAdapter.add("Mark as Unread");
-                    if (module.getModType() == Module.Type.RESOURCE) // Properties are available only for a single file
-                        arrayAdapter.add("Properties");
-
-                    alertDialog.setAdapter(arrayAdapter, (dialogInterface, selection) -> {
-                        switch (selection) {
-                            case 0:
-                                if (module.getContents() != null)
-                                    for (Content content : module.getContents()) {
-                                        mFileManager.openFile(content.getFilename(), courseName);
-                                    }
-                                break;
-                            case 1:
-                                if (!module.isDownloadable()) {
-                                    return;
-                                }
-
-                                for (Content content : module.getContents()) {
-                                    Toast.makeText(context, "Downloading file - " + content.getFilename(), Toast.LENGTH_SHORT).show();
-                                    mFileManager.downloadFile(content, module, courseName);
-                                }
-                                break;
-                            case 2:
-                                if (module.getContents() != null)
-                                    for (Content content : module.getContents()) {
-                                        mFileManager.shareFile(content.getFilename(), courseName);
-                                    }
-                                break;
-                            case 3:
-                                markAsReadandUnread(module, position, true);
-                                break;
-                            case 4:
-                                mFileManager.showPropertiesDialog(context, module.getContents().get(0));
-                                break;
-                        }
-                    });
-                } else {
-                    arrayAdapter.add("Download");
-                    arrayAdapter.add("Share");
-                    arrayAdapter.add("Mark as Unread");
-                    if (module.getModType() == Module.Type.RESOURCE) // Properties are available only for a single file
-                        arrayAdapter.add("Properties");
-
-                    alertDialog.setAdapter(arrayAdapter, (dialogInterface, selection) -> {
-                        switch (selection) {
-                            case 0:
-                                mFileManager.downloadFile(module.getContents().get(0), module, courseName);
-                                break;
-                            case 1:
-                                shareModuleLinks(module);
-                                break;
-                            case 2:
-                                markAsReadandUnread(module, position, true);
-                            case 3:
-                                mFileManager.showPropertiesDialog(context, module.getContents().get(0));
-                                break;
-                        }
-                    });
-                }
-
-                alertDialog.show();
-                markAsReadandUnread(modules.get(getLayoutPosition()), getLayoutPosition(), false);
+//<<<<<<< HEAD
+//                final Module module = modules.get(getLayoutPosition());
+//                final int position = getLayoutPosition();
+//                AlertDialog.Builder alertDialog;
+//
+//                if (MyApplication.getInstance().isDarkModeEnabled()) {
+//                    alertDialog = new AlertDialog.Builder(context,R.style.Theme_AppCompat_Dialog_Alert);
+//                } else {
+//                    alertDialog = new AlertDialog.Builder(context,R.style.Theme_AppCompat_Light_Dialog_Alert);
+//                }
+//
+//                alertDialog.setTitle(module.getName());
+//                alertDialog.setNegativeButton("Cancel", null);
+//
+//                final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1);
+//                if (downloaded) {
+//                    arrayAdapter.add("View");
+//                    arrayAdapter.add("Re-Download");
+//                    arrayAdapter.add("Share");
+//                    arrayAdapter.add("Mark as Unread");
+//                    if (module.getModType() == Module.Type.RESOURCE) // Properties are available only for a single file
+//                        arrayAdapter.add("Properties");
+//
+//                    alertDialog.setAdapter(arrayAdapter, (dialogInterface, selection) -> {
+//                        switch (selection) {
+//                            case 0:
+//                                if (module.getContents() != null)
+//                                    for (Content content : module.getContents()) {
+//                                        mFileManager.openFile(content.getFilename(), courseName);
+//                                    }
+//                                break;
+//                            case 1:
+//                                if (!module.isDownloadable()) {
+//                                    return;
+//                                }
+//
+//                                for (Content content : module.getContents()) {
+//                                    Toast.makeText(context, "Downloading file - " + content.getFilename(), Toast.LENGTH_SHORT).show();
+//                                    mFileManager.downloadFile(content, module, courseName);
+//                                }
+//                                break;
+//                            case 2:
+//                                if (module.getContents() != null)
+//                                    for (Content content : module.getContents()) {
+//                                        mFileManager.shareFile(content.getFilename(), courseName);
+//                                    }
+//                                break;
+//                            case 3:
+//                                markAsReadandUnread(module, position, true);
+//                                break;
+//                            case 4:
+//                                mFileManager.showPropertiesDialog(context, module.getContents().get(0));
+//                                break;
+//                        }
+//                    });
+//                } else {
+//                    arrayAdapter.add("Download");
+//                    arrayAdapter.add("Share");
+//                    arrayAdapter.add("Mark as Unread");
+//                    if (module.getModType() == Module.Type.RESOURCE) // Properties are available only for a single file
+//                        arrayAdapter.add("Properties");
+//
+//                    alertDialog.setAdapter(arrayAdapter, (dialogInterface, selection) -> {
+//                        switch (selection) {
+//                            case 0:
+//                                mFileManager.downloadFile(module.getContents().get(0), module, courseName);
+//                                break;
+//                            case 1:
+//                                shareModuleLinks(module);
+//                                break;
+//                            case 2:
+//                                markAsReadandUnread(module, position, true);
+//                            case 3:
+//                                mFileManager.showPropertiesDialog(context, module.getContents().get(0));
+//                                break;
+//                        }
+//                    });
+//                }
+//
+//                alertDialog.show();
+//                markAsReadandUnread(modules.get(getLayoutPosition()), getLayoutPosition(), false);
+//=======
+               MoreOptionsFragment moreOptionsFragment = MoreOptionsFragment.newInstance(downloaded, courseName,modules.get(getLayoutPosition()).getId());
+               moreOptionsFragment.show(((FragmentActivity)context).getSupportFragmentManager(),moreOptionsFragment.getTag());
+               // markAsReadandUnread(modules.get(getLayoutPosition()), getLayoutPosition());
+               markAsReadandUnread(modules.get(getLayoutPosition()), getLayoutPosition(), false);
+//>>>>>>> aaf1263 ... Fixes #34 : Shifts more options to bottom sheet
             });
             progressBar = itemView.findViewById(R.id.progressBar);
         }
