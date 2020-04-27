@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
@@ -28,6 +29,7 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import app.MyApplication;
@@ -36,7 +38,7 @@ import crux.bphc.cms.fragments.MoreOptionsFragment;
 import set.Content;
 import set.Module;
 
-public class ModulesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ModulesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements MoreOptionsFragment.OptionHandlerCallBack {
 
     CourseDataHandler courseDataHandler;
     private MyFileManager mFileManager;
@@ -48,6 +50,9 @@ public class ModulesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private int courseID;
     private int maxDescriptionlines = 3;
 
+    private MoreOptionsFragment.Option[] options;  // The options that we are using
+    private Module curModule;
+
     public ModulesAdapter(Context context, MyFileManager fileManager, String courseName, int courseID) {
         this.context = context;
         inflater = LayoutInflater.from(context);
@@ -58,12 +63,10 @@ public class ModulesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         courseDataHandler = new CourseDataHandler(context);
     }
 
-
     public void setModules(List<Module> modules) {
         this.modules = modules;
         notifyDataSetChanged();
     }
-
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -90,6 +93,26 @@ public class ModulesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         position++;
         return modules.size() > position && modules.get(position).getModType() == Module.Type.LABEL;
 
+    }
+
+    @Override
+    public void onOptionSelect(int id) {
+        /* This probably isn't the best way to do this, but we are going to compare the `option_text`
+         * and handle accordingly. Code neatness annd quality aside, this shouldn't be a huge problem
+         * since `option_text` will have to be unique when shown to the user.
+         */
+
+        switch (this.options[id].getOptionText()) {
+            case "View":
+                if (curModule.getContents() != null) {
+                    for (Content content : curModule.getContents()) {
+                        mFileManager.openFile(content.getFilename(), courseName);
+                    }
+                }
+                break;
+            default:
+                Toast.makeText(context, "Sorry. This option is still a WIP.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     class ViewHolderResource extends RecyclerView.ViewHolder {
@@ -127,20 +150,27 @@ public class ModulesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
 
             more.setOnClickListener(v -> {
-//<<<<<<< HEAD
-//                final Module module = modules.get(getLayoutPosition());
-//                final int position = getLayoutPosition();
-//                AlertDialog.Builder alertDialog;
-//
-//                if (MyApplication.getInstance().isDarkModeEnabled()) {
-//                    alertDialog = new AlertDialog.Builder(context,R.style.Theme_AppCompat_Dialog_Alert);
-//                } else {
-//                    alertDialog = new AlertDialog.Builder(context,R.style.Theme_AppCompat_Light_Dialog_Alert);
-//                }
-//
+                final Module module = modules.get(getLayoutPosition());
+                final int position = getLayoutPosition();
+
+                ArrayList<MoreOptionsFragment.Option> options = new ArrayList<>();
+                if (downloaded) {
+                    options.addAll(Arrays.asList(
+                            new MoreOptionsFragment.Option(1, "View", R.drawable.eye),
+                            new MoreOptionsFragment.Option(2, "Re-Download", R.drawable.eye),
+                            new MoreOptionsFragment.Option(3, "Share", R.drawable.eye),
+                            new MoreOptionsFragment.Option(4, "Mark as Unread", R.drawable.eye)
+                    ));
+                    if (module.getModType() == Module.Type.RESOURCE) {
+                        options.add(new MoreOptionsFragment.Option(
+                                5, "Properties", R.drawable.eye));
+                    }
+                }
+
+                ModulesAdapter.this.options = options.toArray(new MoreOptionsFragment.Option[0]);
+                ModulesAdapter.this.curModule = module;
+
 //                alertDialog.setTitle(module.getName());
-//                alertDialog.setNegativeButton("Cancel", null);
-//
 //                final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1);
 //                if (downloaded) {
 //                    arrayAdapter.add("View");
@@ -209,11 +239,10 @@ public class ModulesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 //                alertDialog.show();
 //                markAsReadandUnread(modules.get(getLayoutPosition()), getLayoutPosition(), false);
 //=======
-               MoreOptionsFragment moreOptionsFragment = MoreOptionsFragment.newInstance(downloaded, courseName,modules.get(getLayoutPosition()).getId());
+               MoreOptionsFragment moreOptionsFragment = MoreOptionsFragment.newInstance(ModulesAdapter.this.options);
                moreOptionsFragment.show(((FragmentActivity)context).getSupportFragmentManager(),moreOptionsFragment.getTag());
                // markAsReadandUnread(modules.get(getLayoutPosition()), getLayoutPosition());
                markAsReadandUnread(modules.get(getLayoutPosition()), getLayoutPosition(), false);
-//>>>>>>> aaf1263 ... Fixes #34 : Shifts more options to bottom sheet
             });
             progressBar = itemView.findViewById(R.id.progressBar);
         }

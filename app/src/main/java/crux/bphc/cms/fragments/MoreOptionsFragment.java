@@ -1,23 +1,20 @@
 package crux.bphc.cms.fragments;
 
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-import app.MyApplication;
 import crux.bphc.cms.R;
 import helper.MyFileManager;
-import io.realm.Realm;
-import set.Content;
 import set.Module;
 
 public class MoreOptionsFragment extends BottomSheetDialogFragment {
@@ -34,15 +31,12 @@ public class MoreOptionsFragment extends BottomSheetDialogFragment {
     private String courseName;
     private int moduleId;
 
-    public MoreOptionsFragment() {
+    private MoreOptionsFragment.Option[] options;
 
-    }
-
-    public static MoreOptionsFragment newInstance(boolean downloaded, String couseName ,int moduleId) {
+    public static MoreOptionsFragment newInstance(MoreOptionsFragment.Option... options) {
         Bundle args = new Bundle();
-        args.putBoolean(IS_DOWNLOAD, downloaded);
-        args.putString(COURSE_NAME,couseName);
-        args.putInt(MODULE_ID,moduleId);
+        args.putParcelableArray("options", options);
+
         MoreOptionsFragment fragment = new MoreOptionsFragment();
         fragment.setArguments(args);
         return fragment;
@@ -52,15 +46,10 @@ public class MoreOptionsFragment extends BottomSheetDialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
-        if(args!=null)
+        if(args != null)
         {
-           downloaded = args.getInt(IS_DOWNLOAD);
-           courseName = args.getString(COURSE_NAME);
-           moduleId = args.getInt(MODULE_ID);
+            options = (MoreOptionsFragment.Option[]) args.getParcelableArray("options");
         }
-        mFileManager = new MyFileManager(getActivity(), "courseName");
-        mFileManager.registerDownloadReceiver();
-
     }
 
     @Nullable
@@ -73,56 +62,73 @@ public class MoreOptionsFragment extends BottomSheetDialogFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         listView = view.findViewById(R.id.more_options_list);
         arrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1);
-        if (downloaded == 1) {
-            arrayAdapter.add("View");
-            arrayAdapter.add("Re-Download");
-            arrayAdapter.add("Share");
-        } else {
-            arrayAdapter.add("Download");
+        for (MoreOptionsFragment.Option option : options) {
+            arrayAdapter.add(option.optionText);
         }
-        getDatafromRealm();
         listView.setAdapter(arrayAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if (downloaded == 1) {
-                    switch (i) {
-                        case 0:
-                            if (courseModule.getContents() != null)
-                                for (Content content : courseModule.getContents()) {
-                                    mFileManager.openFile(content.getFilename(), courseName);
-
-                                }
-                            break;
-                        case 1:
-                            if (!courseModule.isDownloadable()) {
-                                return;
-                            }
-
-                            for (Content content : courseModule.getContents()) {
-                                Toast.makeText(getContext(), "Downloading file - " + content.getFilename(), Toast.LENGTH_SHORT).show();
-                                mFileManager.downloadFile(content, courseModule, courseName);
-                            }
-                            break;
-                        case 2:
-                            if (courseModule.getContents() != null)
-                                for (Content content : courseModule.getContents()) {
-                                    mFileManager.shareFile(content.getFilename(), courseName);
-                                }
-
-                    }
-                } else {
-                    mFileManager.downloadFile(courseModule.getContents().get(0), courseModule, courseName);
-                }
-            }
+        listView.setOnItemClickListener((parent, view1, position, id) -> {
+            if (getActivity().getClass().isAssignableFrom(MoreOptionsFragment.ActivityCallback.class))
+                ((MoreOptionsFragment.ActivityCallback) getActivity()).onOptionSelect(position);
         });
     }
 
-    private void getDatafromRealm(){
-        Realm realm = Realm.getInstance(MyApplication.getRealmConfiguration());
-        Module module = realm.where(Module.class).equalTo("id",moduleId).findFirst();
-        courseModule = module;
-        realm.close();
+    public static class Option implements Parcelable {
+        int id;
+        String optionText;
+        int drawableIcon;
 
+        public Option(int id, String option_text, int drawable_icon) {
+            this.id = id;
+            this.optionText = option_text;
+            this.drawableIcon = drawable_icon;
+        }
+
+        protected Option(Parcel in) {
+            id = in.readInt();
+            optionText = in.readString();
+            drawableIcon = in.readInt();
+        }
+
+        public static final Creator<Option> CREATOR = new Creator<Option>() {
+            @Override
+            public Option createFromParcel(Parcel in) {
+                return new Option(in);
+            }
+
+            @Override
+            public Option[] newArray(int size) {
+                return new Option[size];
+            }
+        };
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(this.id);
+            dest.writeString(this.optionText);
+            dest.writeInt(this.drawableIcon);
+        }
+
+        public String getOptionText() {
+            return optionText;
+        }
+
+    }
+
+     public interface ActivityCallback {
+        void onOptionSelect(int id);
+    }
+
+    /**
+     * This interface is provided only for convinience and is not directly used by
+     * `MoreOptionsFragment`. It's intended to be implemented by the actual consumers of the
+     * selected option like fragments or a helper Class for an activity.
+     **/
+    public interface OptionHandlerCallBack {
+        void onOptionSelect(int id);
     }
 }

@@ -17,6 +17,7 @@ import crux.bphc.cms.fragments.CourseEnrolFragment;
 import crux.bphc.cms.fragments.CourseSectionFragment;
 import crux.bphc.cms.fragments.DiscussionFragment;
 import crux.bphc.cms.fragments.ForumFragment;
+import crux.bphc.cms.fragments.MoreOptionsFragment;
 import io.realm.Realm;
 import set.Course;
 import set.forum.Discussion;
@@ -25,7 +26,7 @@ import set.search.Contact;
 import static app.Constants.COURSE_PARCEL_INTENT_KEY;
 import static app.Constants.TOKEN;
 
-public class CourseDetailActivity extends AppCompatActivity {
+public class CourseDetailActivity extends AppCompatActivity implements MoreOptionsFragment.ActivityCallback {
 
     public static final String COURSE_ENROL_FRAG_TRANSACTION_KEY = "course_enrol_frag";
     public List<Contact> contacts;
@@ -145,4 +146,25 @@ public class CourseDetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onOptionSelect(int id) {
+        FragmentManager fm = getSupportFragmentManager();
+
+        /*
+         * The assumption here is that there's only fragment attached at a time and they are all
+         * added to the same container and commited to the back stack. `findFragmentById` starts from
+         * the top of the stack. After that it's just a simple check to see if it's a compataible
+         * fragment and then call its handler
+         */
+        Fragment fragment = fm.findFragmentById(R.id.course_section_enrol_container);
+        if (fragment != null) {
+            if (fragment.getClass().isAssignableFrom(MoreOptionsFragment.OptionHandlerCallBack.class)) {
+                ((MoreOptionsFragment.OptionHandlerCallBack) fragment).onOptionSelect(id);
+                return;
+            }
+        }
+
+        
+    }
+    }
 }
