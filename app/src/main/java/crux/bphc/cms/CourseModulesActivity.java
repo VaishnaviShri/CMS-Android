@@ -58,7 +58,7 @@ public class CourseModulesActivity extends AppCompatActivity {
         }
 
         realm = MyApplication.getInstance().getRealmInstance();
-        setContentView(R.layout.activity_course_modules);
+        //setContentView(R.layout.activity_course_modules);
 
 
         RealmResults<CourseSection> sections = realm.where(CourseSection.class).equalTo("id", sectionID).findAll();

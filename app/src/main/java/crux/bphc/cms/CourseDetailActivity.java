@@ -167,4 +167,4 @@ public class CourseDetailActivity extends AppCompatActivity implements MoreOptio
         
     }
     }
-}
+
