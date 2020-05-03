@@ -40,11 +40,11 @@
                     <helper.HtmlTextView
                         android:id="@+id/courseName1"
                         android:layout_width="match_parent"
-                        android:layout_height="84dp"
+                        android:layout_height="88dp"
                         android:text="CS F321"
                         android:textColor="?android:textColorPrimary"
                         android:textStyle="bold"
-                        android:textSize="16sp"
+                        android:textSize="18sp"
                         android:padding="16dp"/>
                     <helper.HtmlTextView
                         android:id="@+id/courseName2"
@@ -60,8 +60,8 @@
 
                 <ImageView
                     android:id="@+id/more_options_button"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
                     android:layout_marginRight="6dp"
                     android:gravity="right"
                     android:layout_gravity="center_vertical"
@@ -73,16 +73,12 @@
                     android:rotation="90"  />
 
             </LinearLayout>
-
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
                 android:orientation="horizontal">
-
-
 
                 <RelativeLayout
                     android:id="@+id/download"
@@ -92,9 +88,7 @@
                     android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:padding="16dp"
-                    android:visibility="gone"
-
-                    >
+                    android:visibility="gone">
 
                     <ProgressBar
                         android:id="@+id/progressBar"
@@ -122,8 +116,6 @@
                         android:textSize="14sp" />
                 </RelativeLayout>
             </LinearLayout>
-
-
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

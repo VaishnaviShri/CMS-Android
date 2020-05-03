@@ -425,52 +425,43 @@ public class MyCoursesFragment extends Fragment {
                 unreadCount = itemView.findViewById(R.id.unreadCount);
                 rowClickWrapper= itemView.findViewById(R.id.rowClickWrapper);
 
-                rowClickWrapper.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (clickListener != null) {
-                            int pos = getLayoutPosition();
-                            clickListener.onClick(mCourseList.get(pos), pos);
-                        }
+                rowClickWrapper.setOnClickListener(view -> {
+                    if (clickListener != null) {
+                        int pos = getLayoutPosition();
+                        clickListener.onClick(mCourseList.get(pos), pos);
                     }
                 });
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (clickListener != null) {
-                            int pos = getLayoutPosition();
-                            clickListener.onClick(mCourseList.get(pos), pos);
-                        }
+                itemView.setOnClickListener(view -> {
+                    if (clickListener != null) {
+                        int pos = getLayoutPosition();
+                        clickListener.onClick(mCourseList.get(pos), pos);
                     }
                 });
-                download.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        AlertDialog.Builder alertDialog;
+                download.setOnClickListener(view -> {
+                    AlertDialog.Builder alertDialog;
 
-                        if (MyApplication.getInstance().isDarkModeEnabled()) {
-                            alertDialog = new AlertDialog.Builder(getContext(),R.style.Theme_AppCompat_Dialog_Alert);
-                        } else {
-                            alertDialog = new AlertDialog.Builder(getContext(),R.style.Theme_AppCompat_Light_Dialog_Alert);
-                        }
+                    if (MyApplication.getInstance().isDarkModeEnabled()) {
+                        alertDialog = new AlertDialog.Builder(getContext(),R.style.Theme_AppCompat_Dialog_Alert);
+                    } else {
+                        alertDialog = new AlertDialog.Builder(getContext(),R.style.Theme_AppCompat_Light_Dialog_Alert);
+                    }
 
-                        alertDialog.setTitle("Confirm Download");
-                        alertDialog.setMessage("Are you sure, you want to download the course?");
-                        alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                if (downloadClickListener != null) {
-                                    int pos = getLayoutPosition();
-                                    if (!downloadClickListener.onClick(courses.get(pos), pos)) {
-                                        Toast.makeText(getActivity(), "Download already in progress", Toast.LENGTH_SHORT).show();
-                                    }
+                    alertDialog.setTitle("Confirm Download");
+                    alertDialog.setMessage("Are you sure, you want to download the course?");
+                    alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            if (downloadClickListener != null) {
+                                int pos = getLayoutPosition();
+                                if (!downloadClickListener.onClick(courses.get(pos), pos)) {
+                                    Toast.makeText(getActivity(), "Download already in progress", Toast.LENGTH_SHORT).show();
                                 }
                             }
-                        });
-                        alertDialog.setNegativeButton("Cancel", null);
-                        alertDialog.show();
+                        }
+                    });
+                    alertDialog.setNegativeButton("Cancel", null);
+                    alertDialog.show();
 
-                    }
                 });
             }
 

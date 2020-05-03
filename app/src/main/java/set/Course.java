@@ -113,23 +113,20 @@ public class Course extends RealmObject {
 
     public String[] getCourseName(){
         String courseName = getShortname();
-        // Specifies the string pattern which is to be searched
-        String regex =  " ";
-        Pattern pattern = Pattern.compile(regex , Pattern.CASE_INSENSITIVE);
-
-        // Used to perform case insensitive search of the string
+        String regex =  " ";    // Specifies the string pattern which is to be searched
+        Pattern pattern = Pattern.compile(regex , Pattern.CASE_INSENSITIVE);    // Used to perform case insensitive search of the string
         String[] parts = pattern.split(courseName);
 
-        String courseCode = parts[0]+" "+parts[1];
+        String courseCode = parts[0] + " " + parts[1];
         String name = "";
-        if(parts.length>2) {
+        if(parts.length > 2) {
             for (int i = 2; i < parts.length; i++) {
                 name = name + parts[i] + " ";
             }
         }
-        String[] result= new String[2];
-        result[0]=courseCode;
-        result[1]=name;
+        String[] result = new String[2];
+        result[0] = courseCode;
+        result[1] = name;
 
         return result;
 
