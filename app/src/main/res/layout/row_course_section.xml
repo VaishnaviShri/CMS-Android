@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
     android:orientation="vertical"
-    android:background="?cardBgColor">
+    android:background="?themeBackground">
 
     <LinearLayout
         android:background="?attr/selectableItemBackgroundBorderless"
@@ -14,45 +15,52 @@
         android:paddingTop="8dp"
         android:paddingBottom="8dp">
 
-        <View
-            android:layout_width="8dp"
-            android:layout_height="4dp"
-            android:layout_gravity="center_vertical"
-            android:background="?colorAccent" />
-
         <TextView
             android:id="@+id/sectionName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?colorAccent"
             android:padding="8dp"
+            android:layout_marginLeft="8dp"
             android:text="Section 1"
-            android:textColor="@color/white"
+            android:textColor="?android:textColorPrimary"
             android:textSize="18sp"
             android:textStyle="bold" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/courseSectionDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone">
+        <View
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="?colorAccent"
+            android:layout_marginLeft="8dp"/>
     <helper.HtmlTextView
+        android:id="@+id/description"
         android:clickable="true"
         android:focusable="true"
         android:visibility="gone"
         android:layout_marginTop="4dp"
-        android:id="@+id/description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
+        android:layout_marginVertical="8dp"
         android:text="@string/lorem"
         android:textColor="?android:textColorPrimary"
-        android:textSize="16sp"
-         />
+        android:textSize="14sp"
+        android:textStyle="italic"/>
+      </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-android:clipChildren="false"
+        android:clipChildren="false"
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        android:layout_height="wrap_content"/>
 
 
 </LinearLayout>

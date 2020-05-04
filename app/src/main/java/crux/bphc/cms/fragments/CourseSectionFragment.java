@@ -263,6 +263,7 @@ public class CourseSectionFragment extends Fragment {
             }
         });*/
         if (!section.getSummary().isEmpty()) {
+            v.findViewById(R.id.courseSectionDescription).setVisibility(View.VISIBLE);
             v.findViewById(R.id.description).setVisibility(View.VISIBLE);
             String descriptionWithOutExtraSpace = addToken(section.getSummary().trim());
             TextView textView = v.findViewById(R.id.description);
