@@ -59,6 +59,7 @@ public class MoreOptionsFragment extends BottomSheetDialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setStyle(STYLE_NORMAL, R.style. AppBottomSheetDialogTheme);
         Bundle args = getArguments();
         if (args != null) {
             header = args.getString("header");
