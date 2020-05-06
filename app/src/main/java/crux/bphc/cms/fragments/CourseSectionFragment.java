@@ -246,9 +246,9 @@ public class CourseSectionFragment extends Fragment {
             return;
 
         if ((section.getModules() == null || section.getModules().isEmpty())
-                && (section.getSummary() == null || section.getSummary().isEmpty())) {
+                && (section.getSummary() == null || section.getSummary().isEmpty())
+                    && (section.getName().matches("Topic \\d+")))
             return;
-        }
 
         View v = LayoutInflater.from(getActivity()).inflate(R.layout.row_course_section, linearLayout, false);
 

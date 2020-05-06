@@ -16,6 +16,7 @@
         <item name="iconTintColor">@android:color/transparent</item> <!-- This is equivalent to no tint-->
         <item name="tokenImageTint">@android:color/transparent</item>
         <item name="cardBgColor">@color/cardBackgroundLight</item>
+        <item name="unReadModule">@color/moduleUnreadLight</item>
         <item name="dividerColor">@color/gray74</item>
     </style>
 
@@ -31,6 +32,7 @@
         <item name="navBarAppearance">@style/navBarDark</item>
         <item name="navBarHeaderDrawable">@drawable/navbar_header_dark</item>
         <item name="cardBgColor">@color/cardBackgroundDark</item>
+        <item name="unReadModule">@color/moduleUnreadDark</item>
         <item name="iconTintColor">@color/white</item>
         <item name="tokenImageTint">@color/black_alpha26</item>
         <item name="dividerColor">@color/gray26</item>

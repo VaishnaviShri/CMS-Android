@@ -98,7 +98,7 @@ public class ModulesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         ImageView modIcon, more, downloadIcon;
         boolean downloaded = false;
         ProgressBar progressBar;
-        View iconWrapper, topDivider, bottomDivider, nameAndDescriptionDivider, unReadBar;
+        View iconWrapper, topDivider, bottomDivider, nameAndDescriptionDivider;
         View clickWrapper, textWrapper, clickWrapperName;
         CardView cardView;
 
@@ -112,7 +112,6 @@ public class ModulesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             cardView = itemView.findViewById(R.id.row_course_module_cardView);
             //topDivider = itemView.findViewById(R.id.topDivider);
             //bottomDivider = itemView.findViewById(R.id.bottomDivider);
-            //unReadBar = itemView.findViewById(R.id.unReadBar);
             description = itemView.findViewById(R.id.description);
             clickWrapper = itemView.findViewById(R.id.clickWrapper);
             clickWrapperName = itemView.findViewById(R.id.clickWrapper);
@@ -236,18 +235,14 @@ public class ModulesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         void bind(Module module) {
             if (module.isNewContent()) {
-                //unReadBar.setVisibility(View.VISIBLE);
-                cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.navBarSelected));
+                TypedValue value = new TypedValue();
+                context.getTheme().resolveAttribute(R.attr.unReadModule,value,true);
+                textWrapper.setBackgroundColor(value.data);
             }
             else {
-                if (MyApplication.getInstance().isDarkModeEnabled())
-                    cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.cardBackgroundDark));
-                else
-                    cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.cardBackgroundLight));
-
-                /*TypedValue value = new TypedValue();
+                TypedValue value = new TypedValue();
                 context.getTheme().resolveAttribute(R.attr.cardBgColor,value,true);
-                itemView.setBackgroundColor(value.data);*/
+                cardView.setCardBackgroundColor(value.data);
             }
 
             name.setText(module.getName());
