@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="?themeBackground"
@@ -6,8 +6,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="crux.bphc.cms.fragments.MyCoursesFragment">
+    tools:context="crux.bphc.cms.fragments.MyCoursesFragment">-->
 
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
     <androidx.cardview.widget.CardView
         app:cardBackgroundColor="?cardBgColor"
         android:layout_width="match_parent"
@@ -16,7 +28,8 @@
         android:layout_marginRight="14dp"
         android:layout_marginTop="16dp"
         app:cardCornerRadius="28dp"
-        android:layout_marginBottom="5dp">
+        android:layout_marginBottom="5dp"
+        app:layout_scrollFlags="scroll|enterAlways">
 
 
         <LinearLayout
@@ -60,6 +73,8 @@
                 app:srcCompat="@drawable/filter" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
+    </android.support.design.widget.AppBarLayout>
+
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -75,6 +90,14 @@
             android:textColor="?android:textColorPrimary"
             android:textSize="18sp" />
 
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:padding="8dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
@@ -88,8 +111,11 @@
                 android:padding="8dp" />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        </androidx.recyclerview.widget.RecyclerView>
     </RelativeLayout>
-</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
 
 
 
