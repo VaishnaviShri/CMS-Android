@@ -408,7 +408,10 @@ public class MyCoursesFragment extends Fragment {
         }
 
         List<Course> rearrangeCourses(List<Course> courseList) {
-            List<Course> displayCourseList = courseList;
+            List<Course> displayCourseList = new ArrayList<>(courseList.size());
+            for (int i = 0; i < courseList.size(); i++) {
+                displayCourseList.add(null);
+            }
             int pos = 0;
             for (int i = 0; i < courseList.size(); i++) {
                 if(courseList.get(i).isFavorite()){
