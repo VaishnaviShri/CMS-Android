@@ -8,17 +8,18 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import crux.bphc.cms.app.MyApplication;
-import io.realm.Realm;
-import io.realm.RealmList;
-import io.realm.RealmResults;
-import io.realm.Sort;
 import crux.bphc.cms.models.Content;
 import crux.bphc.cms.models.Course;
 import crux.bphc.cms.models.CourseSection;
 import crux.bphc.cms.models.Module;
 import crux.bphc.cms.models.forum.Discussion;
+import io.realm.Realm;
+import io.realm.RealmList;
+import io.realm.RealmResults;
+import io.realm.Sort;
 
 /**
  * Created by Harshit Agarwal on 24-11-2017.
@@ -73,11 +74,15 @@ public class CourseDataHandler {
         }
         List<Course> newCourses = new ArrayList<>();
         Realm realm = Realm.getInstance(MyApplication.getRealmConfiguration());
+        List<Course> favCourses = realm.where(Course.class).equalTo("favorite", true).findAll();
+        List<Integer> favCoursesIds = favCourses.stream().map(Course::getCourseId).collect(Collectors.toList());
 
         // Check if course present in db, else add to newCourses
         for (Course course : courseList) {
             if (realm.where(Course.class).equalTo("id", course.getId()).findFirst() == null) {
                 newCourses.add(course);
+            } else {
+                course.setFavoriteStatus(favCoursesIds.contains(course.getCourseId()));
             }
         }
 
@@ -266,6 +271,14 @@ public class CourseDataHandler {
         Realm realm = Realm.getInstance(MyApplication.getRealmConfiguration());
         realm.beginTransaction();
         realm.where(Module.class).equalTo("id", moduleId).findFirst().setNewContent(isNewContent);
+        realm.commitTransaction();
+        realm.close();
+    }
+
+    public void setFavoriteStatus(int courseId, boolean isFavorite) {
+        Realm realm = Realm.getInstance(MyApplication.getRealmConfiguration());
+        realm.beginTransaction();
+        realm.where(Course.class).equalTo("id", courseId).findFirst().setFavoriteStatus(isFavorite);
         realm.commitTransaction();
         realm.close();
     }

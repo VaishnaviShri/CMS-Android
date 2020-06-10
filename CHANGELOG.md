@@ -10,6 +10,7 @@ Dates are in `yyyy-mm-dd`.
 *NOTE: The minimum supported version is now Android 7.0 (API Level 24)*
 
 ### Added
+* Ability to mark courses as favorite for easier access.
 
 ## Changed
 
