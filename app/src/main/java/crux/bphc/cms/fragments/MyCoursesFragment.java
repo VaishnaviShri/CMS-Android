@@ -389,8 +389,9 @@ public class MyCoursesFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(MyViewHolder holder, int position) {
-            holder.bind(mCourseList.get(position));
+            holder.bind(rearrangeCourses(mCourseList).get(position));
         }
+
 
         @Override
         public int getItemCount() {
@@ -402,7 +403,26 @@ public class MyCoursesFragment extends Fragment {
             for (int i = 0; i < mCourseList.size(); i++) {
                 mCourseList.get(i).setDownloadStatus(-1);
             }
+            mCourseList = rearrangeCourses(mCourseList);
             notifyDataSetChanged();
+        }
+
+        List<Course> rearrangeCourses(List<Course> courseList) {
+            List<Course> displayCourseList = courseList;
+            int pos = 0;
+            for (int i = 0; i < courseList.size(); i++) {
+                if(courseList.get(i).isFavorite()){
+                    displayCourseList.set(pos, courseList.get(i));
+                    pos++;
+                }
+            }
+            for (int i = 0; i < courseList.size(); i++) {
+                if(!courseList.get(i).isFavorite()){
+                    displayCourseList.set(pos, courseList.get(i));
+                    pos++;
+                }
+            }
+            return displayCourseList;
         }
 
         public void setDownloadClickListener(ClickListener downloadClickListener) {
@@ -414,7 +434,7 @@ public class MyCoursesFragment extends Fragment {
             HtmlTextView courseName1;
             HtmlTextView courseName2;
             View rowClickWrapper;
-            ImageView more_options;
+            ImageView more_options, favorite;
             ProgressBar progressBar;
             TextView unreadCount;
 
@@ -425,6 +445,7 @@ public class MyCoursesFragment extends Fragment {
                 courseName2 = itemView.findViewById(R.id.courseName2);
                 progressBar = itemView.findViewById(R.id.progressBar);
                 more_options = itemView.findViewById(R.id.more_options_button);
+                favorite = itemView.findViewById(R.id.favorite_button);
                 unreadCount = itemView.findViewById(R.id.unreadCount);
                 rowClickWrapper = itemView.findViewById(R.id.rowClickWrapper);
 
@@ -449,7 +470,8 @@ public class MyCoursesFragment extends Fragment {
                     ArrayList<MoreOptionsFragment.Option> options = new ArrayList<>();
                     options.addAll(Arrays.asList(
                             new MoreOptionsFragment.Option(0, "Download course", R.drawable.download),
-                            new MoreOptionsFragment.Option(1, "Mark all as read", R.drawable.eye)
+                            new MoreOptionsFragment.Option(1, "Mark all as read", R.drawable.eye),
+                            new MoreOptionsFragment.Option(2, "Mark as favorite", R.drawable.star)
                     ));
 
                     observer = option -> {
@@ -461,6 +483,10 @@ public class MyCoursesFragment extends Fragment {
 
                             case 1:
                                 markAllAsRead(getLayoutPosition());
+                                break;
+
+                            case 2:
+                                markAsFavorite(getLayoutPosition());
                                 break;
                         }
                         moreOptionsViewModel.getSelection().removeObservers((AppCompatActivity) context);
@@ -495,6 +521,7 @@ public class MyCoursesFragment extends Fragment {
                 int count = courseDataHandler.getUnreadCount(course.getId());
                 unreadCount.setText(Integer.toString(count));
                 unreadCount.setVisibility(count == 0 ? View.INVISIBLE : View.VISIBLE);
+                favorite.setVisibility(course.isFavorite() ? View.VISIBLE : View.INVISIBLE);
             }
 
             void confirmDownloadCourse() {
@@ -523,6 +550,15 @@ public class MyCoursesFragment extends Fragment {
                 unreadCount.setText(Integer.toString(count));
                 unreadCount.setVisibility(count == 0 ? View.INVISIBLE : View.VISIBLE);
                 Toast.makeText(getActivity(), "Marked all as read", Toast.LENGTH_SHORT).show();
+            }
+
+            public void markAsFavorite(int position){
+                Course course = courses.get(position);
+                course.setFavoriteStatus(true);
+                favorite.setVisibility(View.VISIBLE);
+                /*int courseId = courses.get(position).getCourseId();
+                courseDataHandler.markFavoriteStatus(courseId, true);
+                favorite.setVisibility(View.VISIBLE);*/
             }
         }
 

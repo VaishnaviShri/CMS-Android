@@ -270,6 +270,14 @@ public class CourseDataHandler {
         realm.close();
     }
 
+    /*public void markFavoriteStatus(int courseId, boolean isFavorite) {
+        Realm realm = Realm.getInstance(MyApplication.getRealmConfiguration());
+        realm.beginTransaction();
+        realm.where(Course.class).equalTo("id", courseId).findFirst().setFavoriteStatus(isFavorite);
+        realm.commitTransaction();
+        realm.close();
+    }*/
+
     public int getUnreadCount(int id) {
         int count = 0;
         List<CourseSection> courseSections = getCourseData(id);

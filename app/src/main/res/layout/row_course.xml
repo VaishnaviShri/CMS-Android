@@ -61,13 +61,17 @@
                         android:paddingTop="3dp"/>
                 </LinearLayout>
 
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
                 <ImageView
                     android:id="@+id/more_options_button"
                     android:layout_width="28dp"
                     android:layout_height="28dp"
                     android:layout_marginEnd="6dp"
-                    android:gravity="right"
-                    android:layout_gravity="center_vertical"
+                    android:layout_centerInParent="true"
                     android:background="?android:selectableItemBackgroundBorderless"
                     android:clickable="true"
                     android:focusable="true"
@@ -75,6 +79,22 @@
                     app:srcCompat="@drawable/dots_horizontal"
                     android:rotation="90"  />
 
+                    <ImageView
+                        android:id="@+id/favorite_button"
+                        android:visibility="invisible"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_marginEnd="6dp"
+                        android:layout_alignParentBottom="true"
+                        android:padding="2dp"
+                        android:layout_margin="2dp"
+                        android:background="?android:selectableItemBackgroundBorderless"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:tint="?iconTintColor"
+                        app:srcCompat="@drawable/star"/>
+
+                </RelativeLayout>
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>

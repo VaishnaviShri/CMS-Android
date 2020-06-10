@@ -24,6 +24,7 @@ public class Course extends RealmObject {
     private int id;
     private int enrolledusercount;
     private String shortname, fullname, summary, format;
+    private boolean favorite;
 
     public Course(int id, int enrolledusercount, String shortname, String fullname, String summary, String format) {
         this.id = id;
@@ -35,6 +36,7 @@ public class Course extends RealmObject {
     }
 
     public Course() {
+        favorite = false;
     }
 
     public Course(crux.bphc.cms.models.search.Course course) {
@@ -149,5 +151,11 @@ public class Course extends RealmObject {
     @Override
     public int hashCode() {
         return id;
+    }
+
+    public void setFavoriteStatus(boolean status){ favorite = status; }
+
+    public boolean isFavorite() {
+        return favorite;
     }
 }
