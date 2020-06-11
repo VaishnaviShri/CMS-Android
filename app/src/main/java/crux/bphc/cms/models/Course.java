@@ -24,6 +24,7 @@ public class Course extends RealmObject {
     private int id;
     private int enrolledusercount;
     private String shortname, fullname, summary, format;
+
     private boolean favorite;
 
     public Course(int id, int enrolledusercount, String shortname, String fullname, String summary, String format) {
@@ -153,7 +154,9 @@ public class Course extends RealmObject {
         return id;
     }
 
-    public void setFavoriteStatus(boolean status){ favorite = status; }
+    public void setFavoriteStatus(boolean status){
+        favorite = status;
+    }
 
     public boolean isFavorite() {
         return favorite;
