@@ -92,6 +92,7 @@ public class MyCoursesFragment extends Fragment {
         if(getActivity() != null) {
             getActivity().setTitle("My Courses");
         }
+        mAdapter.rearrangeCourses();
         super.onStart();
     }
 
@@ -188,6 +189,7 @@ public class MyCoursesFragment extends Fragment {
             @Override
             public void onRefresh() {
                 mSwipeRefreshLayout.setRefreshing(true);
+                mAdapter.rearrangeCourses();
                 makeRequest();
             }
         });
@@ -389,7 +391,7 @@ public class MyCoursesFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(MyViewHolder holder, int position) {
-            holder.bind(rearrangeCourses(mCourseList).get(position));
+            holder.bind(mCourseList.get(position));
         }
 
 
@@ -403,29 +405,28 @@ public class MyCoursesFragment extends Fragment {
             for (int i = 0; i < mCourseList.size(); i++) {
                 mCourseList.get(i).setDownloadStatus(-1);
             }
-            mCourseList = rearrangeCourses(mCourseList);
             notifyDataSetChanged();
         }
 
-        List<Course> rearrangeCourses(List<Course> courseList) {
-            List<Course> displayCourseList = new ArrayList<>(courseList.size());
-            for (int i = 0; i < courseList.size(); i++) {
+        void rearrangeCourses() {
+            List<Course> displayCourseList = new ArrayList<>(mCourseList.size());
+            for (int i = 0; i < mCourseList.size(); i++) {
                 displayCourseList.add(null);
             }
             int pos = 0;
-            for (int i = 0; i < courseList.size(); i++) {
-                if(courseList.get(i).isFavorite()){
-                    displayCourseList.set(pos, courseList.get(i));
+            for (int i = 0; i < mCourseList.size(); i++) {
+                if(mCourseList.get(i).isFavorite()){
+                    displayCourseList.set(pos, mCourseList.get(i));
                     pos++;
                 }
             }
-            for (int i = 0; i < courseList.size(); i++) {
-                if(!courseList.get(i).isFavorite()){
-                    displayCourseList.set(pos, courseList.get(i));
+            for (int i = 0; i < mCourseList.size(); i++) {
+                if(!mCourseList.get(i).isFavorite()){
+                    displayCourseList.set(pos, mCourseList.get(i));
                     pos++;
                 }
             }
-            return displayCourseList;
+            mCourseList = displayCourseList;
         }
 
         public void setDownloadClickListener(ClickListener downloadClickListener) {
@@ -448,7 +449,7 @@ public class MyCoursesFragment extends Fragment {
                 courseName2 = itemView.findViewById(R.id.courseName2);
                 progressBar = itemView.findViewById(R.id.progressBar);
                 more_options = itemView.findViewById(R.id.more_options_button);
-                favorite = itemView.findViewById(R.id.favorite_button);
+                favorite = itemView.findViewById(R.id.favorite);
                 unreadCount = itemView.findViewById(R.id.unreadCount);
                 rowClickWrapper = itemView.findViewById(R.id.rowClickWrapper);
 
@@ -467,35 +468,64 @@ public class MyCoursesFragment extends Fragment {
                 });
 
                 more_options.setOnClickListener(view -> {
-                    MoreOptionsFragment.OptionsViewModel moreOptionsViewModel = MyCoursesFragment.this.moreOptionsViewModel;
-                    Observer<MoreOptionsFragment.Option> observer;  // to handle the selection
-                    //Set up our options and their handlers
-                    ArrayList<MoreOptionsFragment.Option> options = new ArrayList<>();
-                    options.addAll(Arrays.asList(
-                            new MoreOptionsFragment.Option(0, "Download course", R.drawable.download),
-                            new MoreOptionsFragment.Option(1, "Mark all as read", R.drawable.eye),
-                            new MoreOptionsFragment.Option(2, "Mark as favorite", R.drawable.star)
-                    ));
+                            MoreOptionsFragment.OptionsViewModel moreOptionsViewModel = MyCoursesFragment.this.moreOptionsViewModel;
+                            Observer<MoreOptionsFragment.Option> observer;  // to handle the selection
+                            //Set up our options and their handlers
+                            ArrayList<MoreOptionsFragment.Option> options = new ArrayList<>();
 
-                    observer = option -> {
-                        if (option == null) return;
-                        switch (option.getId()) {
-                            case 0:
-                                confirmDownloadCourse();
-                                break;
+                            if(courses.get(getLayoutPosition()).isFavorite()){
+                                options.addAll(Arrays.asList(
+                                        new MoreOptionsFragment.Option(0, "Download course", R.drawable.download),
+                                        new MoreOptionsFragment.Option(1, "Mark all as read", R.drawable.eye),
+                                        new MoreOptionsFragment.Option(2, "Remove from favorites", R.drawable.star)
+                                ));
 
-                            case 1:
-                                markAllAsRead(getLayoutPosition());
-                                break;
+                                observer = option -> {
+                                    if (option == null) return;
+                                    switch (option.getId()) {
+                                        case 0:
+                                            confirmDownloadCourse();
+                                            break;
 
-                            case 2:
-                                markAsFavorite(getLayoutPosition());
-                                break;
-                        }
-                        moreOptionsViewModel.getSelection().removeObservers((AppCompatActivity) context);
-                        moreOptionsViewModel.clearSelection();
-                    };
+                                        case 1:
+                                            markAllAsRead(getLayoutPosition());
+                                            break;
 
+                                        case 2:
+                                            markFavoriteStatus(getLayoutPosition(), false);
+                                            break;
+                                    }
+                                    moreOptionsViewModel.getSelection().removeObservers((AppCompatActivity) context);
+                                    moreOptionsViewModel.clearSelection();
+                                };
+
+                            } else {
+                                options.addAll(Arrays.asList(
+                                        new MoreOptionsFragment.Option(0, "Download course", R.drawable.download),
+                                        new MoreOptionsFragment.Option(1, "Mark all as read", R.drawable.eye),
+                                        new MoreOptionsFragment.Option(2, "Add to favorites", R.drawable.star)
+                                ));
+
+                                observer = option -> {
+                                    if (option == null) return;
+                                    switch (option.getId()) {
+                                        case 0:
+                                            confirmDownloadCourse();
+                                            break;
+
+                                        case 1:
+                                            markAllAsRead(getLayoutPosition());
+                                            break;
+
+                                        case 2:
+                                            markFavoriteStatus(getLayoutPosition(), true);
+                                            break;
+                                    }
+                                    moreOptionsViewModel.getSelection().removeObservers((AppCompatActivity) context);
+                                    moreOptionsViewModel.clearSelection();
+                                };
+
+                            }
                     String courseName = courses.get(getLayoutPosition()).getShortname();
                     MoreOptionsFragment moreOptionsFragment = MoreOptionsFragment.newInstance(courseName, options);
                     moreOptionsFragment.show(((AppCompatActivity) context).getSupportFragmentManager(), moreOptionsFragment.getTag());
@@ -555,13 +585,17 @@ public class MyCoursesFragment extends Fragment {
                 Toast.makeText(getActivity(), "Marked all as read", Toast.LENGTH_SHORT).show();
             }
 
-            public void markAsFavorite(int position){
+            public void markFavoriteStatus(int position, boolean isFavourite){
                 Course course = courses.get(position);
-                course.setFavoriteStatus(true);
-                favorite.setVisibility(View.VISIBLE);
-                /*int courseId = courses.get(position).getCourseId();
-                courseDataHandler.markFavoriteStatus(courseId, true);
-                favorite.setVisibility(View.VISIBLE);*/
+                int courseId = courses.get(position).getCourseId();
+                courseDataHandler.markFavoriteStatus(courseId, isFavourite);
+                //course.setFavoriteStatus(isFavourite);
+                favorite.setVisibility(isFavourite?View.VISIBLE:View.INVISIBLE);
+                System.out.println("!!!FAV STATUS CHANGED!!!!!!!!!");
+                String toast = isFavourite?"Added to favorites":"Removed from favorites";
+                Toast.makeText(getActivity(), toast, Toast.LENGTH_SHORT).show();
+                notifyItemChanged(position);
+
             }
         }
 

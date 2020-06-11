@@ -80,7 +80,7 @@
                         android:rotation="90"  />
 
                     <ImageView
-                        android:id="@+id/favorite_button"
+                        android:id="@+id/favorite"
                         android:visibility="visible"
                         android:layout_width="28dp"
                         android:layout_height="28dp"
@@ -94,10 +94,7 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:tint="?iconTintColor"
-                        app:srcCompat="@drawable/pin"
-                        android:background="@drawable/circular_drawable"
-                        android:backgroundTint="@color/moduleUnreadDark"
-                        android:rotation="30"/>
+                        app:srcCompat="@drawable/star"/>
 
                 </RelativeLayout>
             </LinearLayout>
