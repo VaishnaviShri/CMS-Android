@@ -564,6 +564,7 @@ public class MyCoursesFragment extends Fragment {
                 Course course = courses.get(position);
                 courseDataHandler.markFavoriteStatus(course.getCourseId(), isFavourite);
                 course.setFavoriteStatus(isFavourite);
+                rearrangeCourses();
                 //notifyItemChanged(position);    // would change the status of the course at that position on the screen
                 favorite.setVisibility(isFavourite ? View.VISIBLE : View.INVISIBLE);
                 //System.out.println("!!!FAV STATUS CHANGED!!!!!!!!!");
