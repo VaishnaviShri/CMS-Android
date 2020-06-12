@@ -473,59 +473,34 @@ public class MyCoursesFragment extends Fragment {
                             //Set up our options and their handlers
                             ArrayList<MoreOptionsFragment.Option> options = new ArrayList<>();
 
-                            if(courses.get(getLayoutPosition()).isFavorite()){
-                                options.addAll(Arrays.asList(
-                                        new MoreOptionsFragment.Option(0, "Download course", R.drawable.download),
-                                        new MoreOptionsFragment.Option(1, "Mark all as read", R.drawable.eye),
-                                        new MoreOptionsFragment.Option(2, "Remove from favorites", R.drawable.star)
-                                ));
+                            String favouriteOption = ( courses.get(getLayoutPosition()).isFavorite() ? "Remove from favourites" : "Add to favourites");
+                            boolean isFavorite = (!courses.get(getLayoutPosition()).isFavorite());
 
-                                observer = option -> {
-                                    if (option == null) return;
-                                    switch (option.getId()) {
-                                        case 0:
-                                            confirmDownloadCourse();
-                                            break;
+                    options.addAll(Arrays.asList(
+                            new MoreOptionsFragment.Option(0, "Download course", R.drawable.download),
+                            new MoreOptionsFragment.Option(1, "Mark all as read", R.drawable.eye),
+                            new MoreOptionsFragment.Option(2, favouriteOption, R.drawable.star)
+                    ));
 
-                                        case 1:
-                                            markAllAsRead(getLayoutPosition());
-                                            break;
+                    observer = option -> {
+                        if (option == null) return;
+                        switch (option.getId()) {
+                            case 0:
+                                confirmDownloadCourse();
+                                break;
 
-                                        case 2:
-                                            markFavoriteStatus(getLayoutPosition(), false);
-                                            break;
-                                    }
-                                    moreOptionsViewModel.getSelection().removeObservers((AppCompatActivity) context);
-                                    moreOptionsViewModel.clearSelection();
-                                };
+                            case 1:
+                                markAllAsRead(getLayoutPosition());
+                                break;
 
-                            } else {
-                                options.addAll(Arrays.asList(
-                                        new MoreOptionsFragment.Option(0, "Download course", R.drawable.download),
-                                        new MoreOptionsFragment.Option(1, "Mark all as read", R.drawable.eye),
-                                        new MoreOptionsFragment.Option(2, "Add to favorites", R.drawable.star)
-                                ));
+                            case 2:
+                                markFavoriteStatus(getLayoutPosition(), isFavorite);
+                                break;
+                        }
+                        moreOptionsViewModel.getSelection().removeObservers((AppCompatActivity) context);
+                        moreOptionsViewModel.clearSelection();
+                    };
 
-                                observer = option -> {
-                                    if (option == null) return;
-                                    switch (option.getId()) {
-                                        case 0:
-                                            confirmDownloadCourse();
-                                            break;
-
-                                        case 1:
-                                            markAllAsRead(getLayoutPosition());
-                                            break;
-
-                                        case 2:
-                                            markFavoriteStatus(getLayoutPosition(), true);
-                                            break;
-                                    }
-                                    moreOptionsViewModel.getSelection().removeObservers((AppCompatActivity) context);
-                                    moreOptionsViewModel.clearSelection();
-                                };
-
-                            }
                     String courseName = courses.get(getLayoutPosition()).getShortname();
                     MoreOptionsFragment moreOptionsFragment = MoreOptionsFragment.newInstance(courseName, options);
                     moreOptionsFragment.show(((AppCompatActivity) context).getSupportFragmentManager(), moreOptionsFragment.getTag());
