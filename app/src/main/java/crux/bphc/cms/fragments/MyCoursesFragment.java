@@ -189,7 +189,6 @@ public class MyCoursesFragment extends Fragment {
             @Override
             public void onRefresh() {
                 mSwipeRefreshLayout.setRefreshing(true);
-                mAdapter.rearrangeCourses();
                 makeRequest();
             }
         });
@@ -405,6 +404,7 @@ public class MyCoursesFragment extends Fragment {
             for (int i = 0; i < mCourseList.size(); i++) {
                 mCourseList.get(i).setDownloadStatus(-1);
             }
+            rearrangeCourses();
             notifyDataSetChanged();
         }
 
