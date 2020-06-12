@@ -587,14 +587,14 @@ public class MyCoursesFragment extends Fragment {
 
             public void markFavoriteStatus(int position, boolean isFavourite){
                 Course course = courses.get(position);
-                int courseId = courses.get(position).getCourseId();
-                courseDataHandler.markFavoriteStatus(courseId, isFavourite);
-                //course.setFavoriteStatus(isFavourite);
-                favorite.setVisibility(isFavourite?View.VISIBLE:View.INVISIBLE);
-                System.out.println("!!!FAV STATUS CHANGED!!!!!!!!!");
-                String toast = isFavourite?"Added to favorites":"Removed from favorites";
+                courseDataHandler.markFavoriteStatus(course.getCourseId(), isFavourite);
+                course.setFavoriteStatus(isFavourite);
+                //notifyItemChanged(position);    // would change the status of the course at that position on the screen
+                favorite.setVisibility(isFavourite ? View.VISIBLE : View.INVISIBLE);
+                //System.out.println("!!!FAV STATUS CHANGED!!!!!!!!!");
+                String toast = (isFavourite ? "Added to favorites" : "Removed from favorites");
                 Toast.makeText(getActivity(), toast, Toast.LENGTH_SHORT).show();
-                notifyItemChanged(position);
+
 
             }
         }
