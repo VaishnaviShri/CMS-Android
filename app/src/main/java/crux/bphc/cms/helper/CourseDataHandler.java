@@ -278,6 +278,15 @@ public class CourseDataHandler {
         realm.close();
     }
 
+    public void updateCoursesList(List<Course> courseList){
+        Realm realm = Realm.getInstance(MyApplication.getRealmConfiguration());
+        realm.beginTransaction();
+        realm.copyToRealmOrUpdate(courseList);
+        //realm.where(Course.class).equalTo("id", courseId).findFirst().setFavoriteStatus(isFavorite);
+        realm.commitTransaction();
+        realm.close();
+    }
+
     public int getUnreadCount(int id) {
         int count = 0;
         List<CourseSection> courseSections = getCourseData(id);

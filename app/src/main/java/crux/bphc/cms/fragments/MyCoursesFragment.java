@@ -576,9 +576,10 @@ public class MyCoursesFragment extends Fragment {
                 mCourseList = rearrangeCourses(mCourseList);
                 //courses = rearrangeCourses(courses);
                 notifyDataSetChanged();
-                //notifyItemChanged(position);   // would change the status of the course at that position on the screen
+                courseDataHandler.updateCoursesList(mCourseList);
+                //courseDataHandler.updateCoursesList(courses);
+                courseDataHandler.setCourseList(mCourseList);
                 favorite.setVisibility(isFavourite ? View.VISIBLE : View.INVISIBLE);
-                //System.out.println("!!!FAV STATUS CHANGED!!!!!!!!!");
                 String toast = (isFavourite ? "Added to favorites" : "Removed from favorites");
                 Toast.makeText(getActivity(), toast, Toast.LENGTH_SHORT).show();
 
