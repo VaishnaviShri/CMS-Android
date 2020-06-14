@@ -403,39 +403,8 @@ public class MyCoursesFragment extends Fragment {
             for (int i = 0; i < mCourseList.size(); i++) {
                 mCourseList.get(i).setDownloadStatus(-1);
             }
-            mCourseList = rearrangeCourses(mCourseList);
+            mCourseList = courseDataHandler.rearrangeCourses(mCourseList);
             notifyDataSetChanged();
-        }
-
-        List<Course> rearrangeCourses(List<Course> courseList) {
-
-            List<Course> displayCourseList = courseList;
-
-            displayCourseList.sort(((o1, o2) -> {
-                if(o1.isFavorite() == o2.isFavorite()){
-                    return o1.getShortname().compareTo(o2.getShortname());
-                } else{
-                    return !o1.isFavorite() && o2.isFavorite() ? 1 : -1;
-                }
-            }));
-            /*List<Course> displayCourseList = new ArrayList<>(courseList.size());
-            for (int i = 0; i < courseList.size(); i++) {
-                displayCourseList.add(null);
-            }
-            int pos = 0;
-            for (int i = 0; i < courseList.size(); i++) {
-                if(courseList.get(i).isFavorite()){
-                    displayCourseList.set(pos, courseList.get(i));
-                    pos++;
-                }
-            }
-            for (int i = 0; i < courseList.size(); i++) {
-                if(!courseList.get(i).isFavorite()){
-                    displayCourseList.set(pos, courseList.get(i));
-                    pos++;
-                }
-            }*/
-            return  displayCourseList;
         }
 
         public void setDownloadClickListener(ClickListener downloadClickListener) {
@@ -573,17 +542,12 @@ public class MyCoursesFragment extends Fragment {
                 Course course = mCourseList.get(position);
                 courseDataHandler.markFavoriteStatus(course.getCourseId(), isFavourite);
                 course.setFavoriteStatus(isFavourite);
-                mCourseList = rearrangeCourses(mCourseList);
-                //courses = rearrangeCourses(courses);
+                mCourseList = courseDataHandler.rearrangeCourses(mCourseList);
                 notifyDataSetChanged();
-                courseDataHandler.updateCoursesList(mCourseList);
-                //courseDataHandler.updateCoursesList(courses);
-                courseDataHandler.setCourseList(mCourseList);
+
                 favorite.setVisibility(isFavourite ? View.VISIBLE : View.INVISIBLE);
                 String toast = (isFavourite ? "Added to favorites" : "Removed from favorites");
                 Toast.makeText(getActivity(), toast, Toast.LENGTH_SHORT).show();
-
-
             }
         }
 

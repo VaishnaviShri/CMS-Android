@@ -79,8 +79,10 @@ public class CourseDataHandler {
             if (realm.where(Course.class).equalTo("id", course.getId()).findFirst() == null) {
                 newCourses.add(course);
             }
+            else
+                course.setFavoriteStatus(realm.where(Course.class).equalTo("id", course.getId()).findFirst().isFavorite());
         }
-
+        rearrangeCourses(courseList);
         realm.beginTransaction();
         final RealmResults<Course> results = realm.where(Course.class).findAll();
         results.deleteAllFromRealm(); // delete all existing courses
@@ -100,6 +102,19 @@ public class CourseDataHandler {
         return courses;
     }
 
+    public List<Course> rearrangeCourses(List<Course> courseList) {
+
+        List<Course> displayCourseList = courseList;
+
+        displayCourseList.sort(((o1, o2) -> {
+            if(o1.isFavorite() == o2.isFavorite()){
+                return o1.getShortname().compareTo(o2.getShortname());
+            } else{
+                return !o1.isFavorite() && o2.isFavorite() ? 1 : -1;
+            }
+        }));
+        return  displayCourseList;
+    }
     /**
      * @param courseId    courseId for which the sectionList data is given
      * @param sectionList sectionList data
@@ -274,15 +289,6 @@ public class CourseDataHandler {
         Realm realm = Realm.getInstance(MyApplication.getRealmConfiguration());
         realm.beginTransaction();
         realm.where(Course.class).equalTo("id", courseId).findFirst().setFavoriteStatus(isFavorite);
-        realm.commitTransaction();
-        realm.close();
-    }
-
-    public void updateCoursesList(List<Course> courseList){
-        Realm realm = Realm.getInstance(MyApplication.getRealmConfiguration());
-        realm.beginTransaction();
-        realm.copyToRealmOrUpdate(courseList);
-        //realm.where(Course.class).equalTo("id", courseId).findFirst().setFavoriteStatus(isFavorite);
         realm.commitTransaction();
         realm.close();
     }
