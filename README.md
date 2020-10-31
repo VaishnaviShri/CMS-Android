@@ -6,6 +6,9 @@
 
 This is the Android version of the CMS BPHC app. The app uses standard Moodle endpoints from the server hosted at the [CMS website](https://td.bits-hyderabad.ac.in/moodle/).
 
+![1](https://user-images.githubusercontent.com/58984760/97785801-5bf59980-1bcd-11eb-984d-152f9886b1e7.jpg) ![1](https://user-images.githubusercontent.com/58984760/97785613-15ec0600-1bcc-11eb-9c1d-59360baae75b.jpg)  ![course detail](https://user-images.githubusercontent.com/58984760/97785614-17b5c980-1bcc-11eb-926e-14831220b9fe.jpg)  ![bottom sheet](https://user-images.githubusercontent.com/58984760/97785616-1ab0ba00-1bcc-11eb-808b-9cfc1c7e85e3.jpg) 
+
+
 ## Features
 1. Token based login
 2. View list of enrolled courses
